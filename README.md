@@ -13,7 +13,7 @@ Cowbell is meant to be deployed as a service inside your application stack. To d
     image: nginx
   ...
   cowbell:
-    image: cloudnautique/cowbell:v0.0.1
+    image: cloudnautique/cowbell:v0.0.2
     ports:
       - 8888:8088 //pick a public port that works for your setup.
   ...
