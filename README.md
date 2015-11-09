@@ -16,6 +16,9 @@ Cowbell is meant to be deployed as a service inside your application stack. To d
     image: cloudnautique/cowbell:v0.0.2
     ports:
       - 8888:8088 //pick a public port that works for your setup.
+    labels:
+      io.rancher.container.create_agent: 'true'
+      io.rancher.container.agent.role: environment
   ...
 ```
 
@@ -25,9 +28,6 @@ Then configure Cowbell through rancher-metadata in the rancher-compose.yml file.
 ...
 cowbell:
   metadata:
-    accessKey: "KEY" # Rancher API Access Key
-    secretKey: "SECRET" # Rancher API Secret Key
-    rancherURL: "http://myrancher.com/v1/projects/1a5" # Rancher URL from API
     services:
       - name: "web" # name of the service to scale
         increment: 1 # number of containers to add per event
@@ -44,7 +44,8 @@ Once the service is configured, you should now be able to send a POST and have t
 ### Todo
 
 * Add quiet period to prevent overloading
-* Add Decrement??
+* Max ceiling for containers...
+* Add Decrement?? probably a floor
 
 ### Building
 

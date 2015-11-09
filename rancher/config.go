@@ -2,6 +2,7 @@ package rancher
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/rancher/go-rancher/client"
@@ -67,16 +68,16 @@ func (c *Context) loadConfigFromMetadata() error {
 
 	metadata := getServiceMetadata()
 
-	if val, ok := metadata["rancherURL"]; ok {
-		c.RancherURL = val.(string)
+	if c.RancherURL = os.Getenv("CATTLE_URL"); c.RancherURL == "" {
+		logrus.Fatalf("Could not find Rancher URL")
 	}
 
-	if val, ok := metadata["accessKey"]; ok {
-		c.accessKey = val.(string)
+	if c.accessKey = os.Getenv("CATTLE_ACCESS_KEY"); c.accessKey == "" {
+		logrus.Fatalf("Could not find Rancher access key")
 	}
 
-	if val, ok := metadata["secretKey"]; ok {
-		c.secretKey = val.(string)
+	if c.secretKey = os.Getenv("CATTLE_SECRET_KEY"); c.secretKey == "" {
+		logrus.Fatalf("Could not find Rancher secret key")
 	}
 
 	if _, ok := metadata["services"]; ok {
