@@ -12,7 +12,7 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/cloudnautique/cowbell/Godeps/_workspace/src/github.com/gorilla/websocket"
+	"github.com/gorilla/websocket"
 )
 
 const (

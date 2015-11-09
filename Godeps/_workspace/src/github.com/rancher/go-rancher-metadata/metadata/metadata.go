@@ -15,6 +15,16 @@ func NewClient(url string) *Client {
 	return &Client{url}
 }
 
+func NewClientAndWait(url string) (*Client, error) {
+	client := &Client{url}
+
+	if err := testConnection(client); err != nil {
+		return nil, err
+	}
+
+	return client, nil
+}
+
 func (m *Client) SendRequest(path string) ([]byte, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", m.url+path, nil)

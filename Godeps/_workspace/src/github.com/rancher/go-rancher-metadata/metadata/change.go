@@ -3,7 +3,7 @@ package metadata
 import (
 	"time"
 
-	"github.com/cloudnautique/cowbell/Godeps/_workspace/src/github.com/Sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 func (m *Client) OnChange(intervalSeconds int, do func(string)) {
