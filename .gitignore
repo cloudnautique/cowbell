@@ -2,3 +2,4 @@ cowbell
 build
 dist
 bin
+*.swp
