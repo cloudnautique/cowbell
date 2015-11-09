@@ -1,0 +1,32 @@
+{
+	"ImportPath": "github.com/cloudnautique/cowbell",
+	"GoVersion": "go1.4.2",
+	"Deps": [
+		{
+			"ImportPath": "github.com/Sirupsen/logrus",
+			"Comment": "v0.8.7-35-gfe6f2b0",
+			"Rev": "fe6f2b03125e4fcafb21406381010e363a072c80"
+		},
+		{
+			"ImportPath": "github.com/gorilla/context",
+			"Rev": "1c83b3eabd45b6d76072b66b746c20815fb2872d"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Rev": "ad4d7a5882b961e07e2626045eb995c022ac6664"
+		},
+		{
+			"ImportPath": "github.com/gorilla/websocket",
+			"Rev": "361d4c0ffd78338ebe0a9e6320cdbe115d7dc026"
+		},
+		{
+			"ImportPath": "github.com/rancher/go-rancher-metadata/metadata",
+			"Rev": "5890db2d0ce8a48455e6d63adc8f14466897e684"
+		},
+		{
+			"ImportPath": "github.com/rancher/go-rancher/client",
+			"Comment": "v0.1.0-91-g6d16574",
+			"Rev": "6d165740dab76b313848ccc61742e2fff88dba51"
+		}
+	]
+}

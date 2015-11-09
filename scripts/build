@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+
+cd $(dirname $0)/..
+
+GITCOMMIT=$(git rev-parse --short HEAD)
+
+mkdir -p bin
+echo Building Cowbell
+go build  -o bin/cowbell -a -tags "netgo" -installsuffix netgo -ldflags "-extldflags -static -X main.GITCOMMIT $GITCOMMIT"
