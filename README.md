@@ -33,7 +33,7 @@ cowbell:
         increment: 1 # number of containers to add per event
         decrement: 1 # does nothing yet...
         token: "set this to something long and url friendly"
-        quietTime: 60 # does nothing yet
+        quietTime: 60 # Number of seconds to wait after scaling up.
 ...
 ```
 
@@ -41,9 +41,11 @@ Once the service is configured, you should now be able to send a POST and have t
 
 `curl -X POST http://(host):(publicport)/v1-scale/services/web?token=reallylongtokenthatshouldbekeptsecret``
 
+You'll get a 202 for accepted, and it will asynchronously scale it up.
+A 404 will be returned for all other responses. (Instead of unauthorized)
+
 ### Todo
 
-* Add quiet period to prevent overloading
 * Max ceiling for containers...
 * Add Decrement?? probably a floor
 

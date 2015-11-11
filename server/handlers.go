@@ -12,42 +12,26 @@ import (
 // ScaleUp API entry point to scale service up
 func ScaleUp(w http.ResponseWriter, r *http.Request) {
 	variables := mux.Vars(r)
-	response := respondUnauthorized()
+	response := respond("message", 404)
 
 	logrus.Infof("Request to scale service: %s", variables["serviceName"])
 	if checkServiceToken(variables["serviceName"], r.URL.Query()["token"][0]) {
 		logrus.Infof("Scaling service...%s", variables["serviceName"])
-		response = respondOK()
-		if err := context.ScaleService(variables["serviceName"]); err != nil {
-			logrus.Errorf("%s", err)
-			response = respondServerError()
-		}
+
+		//quickly grab the token and respond. This action can take a while.
+		go context.ScaleServiceUp(variables["serviceName"])
+		response = respond("message", 202)
 	}
 
 	output, _ := json.Marshal(response)
 	fmt.Fprintln(w, string(output))
 }
 
-func respondServerError() *Response {
+func respond(responseType string, code int) *Response {
 	return &Response{
-		Type:   "error",
-		Status: 500,
-		Code:   http.StatusText(500),
-	}
-}
-func respondUnauthorized() *Response {
-	return &Response{
-		Type:   "error",
-		Status: 401,
-		Code:   http.StatusText(401),
-	}
-}
-
-func respondOK() *Response {
-	return &Response{
-		Type:   "message",
-		Status: 200,
-		Code:   http.StatusText(200),
+		Type:   responseType,
+		Status: code,
+		Code:   http.StatusText(code),
 	}
 }
 

@@ -3,31 +3,49 @@ package rancher
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/rancher/go-rancher/client"
 )
 
 //ScaleService increases the scale of named service.
-func (c *Context) ScaleService(serviceName string) error {
+func (c *Context) ScaleServiceUp(serviceName string) {
 	cowbellService, err := c.getService(serviceName)
 	if err != nil {
-		return err
+		logrus.Errorf("Error: %s. looking up cowbell service: %s.", err, serviceName)
+		return
 	}
 	rancherService, err := c.FindExisting(serviceName)
 	if err != nil {
-		return err
+		logrus.Errorf("Error: %s. looking up rancher service: %s.", err, serviceName)
+		return
+	}
+
+	if rancherService == nil {
+		logrus.Errorf("Failed to find %s to scale", serviceName)
+		return
 	}
 
 	newScale := rancherService.Scale + cowbellService.Increment
 
-	if rancherService == nil {
-		return fmt.Errorf("Failed to find %s to scale", serviceName)
+	select {
+	case cowbellService.quietTimeChannel <- 1:
+		err := c.scale(rancherService, newScale)
+		if err != nil {
+			logrus.Errorf("Error: %s. While scaling: %s", err, serviceName)
+		}
+		time.Sleep(time.Duration(cowbellService.QuietTime) * time.Second)
+		<-cowbellService.quietTimeChannel
+	default:
+		logrus.Infof("Not scaling, request to scale %s in quiet time.", rancherService.Name)
 	}
+}
 
-	logrus.Debugf("Setting %s scale to %d", serviceName, newScale)
-	rancherService, err = c.Client.Service.Update(rancherService, map[string]interface{}{
-		"scale": newScale,
+func (c *Context) scale(rancherService *client.Service, scale int64) error {
+	logrus.Debugf("Setting %s scale to %d", rancherService.Name, scale)
+	rancherService, err := c.Client.Service.Update(rancherService, map[string]interface{}{
+		"scale": scale,
 	})
 	if err != nil {
 		return err
