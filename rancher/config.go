@@ -23,11 +23,12 @@ type cowbellConfig struct {
 }
 
 type service struct {
-	Name      string
-	Decrement int64
-	Increment int64
-	Token     string
-	QuietTime int
+	Name             string
+	Decrement        int64
+	Increment        int64
+	Token            string
+	QuietTime        int
+	quietTimeChannel chan int
 }
 
 //InitConfig initializes the application context.
@@ -92,11 +93,12 @@ func (c *Context) loadConfigFromMetadata() error {
 
 func setService(serviceDef map[string]interface{}) *service {
 	s := &service{
-		Name:      serviceDef["name"].(string),
-		Decrement: 0, //disable decrement by default
-		Increment: getInt64FromFloat64(serviceDef["increment"]),
-		Token:     serviceDef["token"].(string),
-		QuietTime: getIntFromFloat64(serviceDef["quietTime"]),
+		Name:             serviceDef["name"].(string),
+		Decrement:        0, //disable decrement by default
+		Increment:        getInt64FromFloat64(serviceDef["increment"]),
+		Token:            serviceDef["token"].(string),
+		QuietTime:        getIntFromFloat64(serviceDef["quietTime"]),
+		quietTimeChannel: make(chan int, 1),
 	}
 
 	if val, ok := serviceDef["decrement"]; ok {
