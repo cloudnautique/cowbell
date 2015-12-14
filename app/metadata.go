@@ -1,4 +1,4 @@
-package rancher
+package app
 
 import (
 	"github.com/Sirupsen/logrus"

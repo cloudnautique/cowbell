@@ -4,17 +4,17 @@ import (
 	"net/http"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/cloudnautique/cowbell/rancher"
+	"github.com/cloudnautique/cowbell/app"
 )
 
 var (
-	context *rancher.Context
+	context *app.Context
 )
 
 //StartServer starts the API server
 func StartServer() {
 	logrus.SetLevel(logrus.DebugLevel)
-	context = &rancher.Context{}
+	context = &app.Context{}
 	err := context.InitConfig()
 	if err != nil {
 		logrus.Fatalf("Could not load context: %s", err)
