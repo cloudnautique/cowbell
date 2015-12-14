@@ -28,19 +28,3 @@ func ScaleUp(w http.ResponseWriter, r *http.Request) {
 	output, _ := json.Marshal(response)
 	fmt.Fprintln(w, string(output))
 }
-
-func respond(responseType string, code int) *Response {
-	return &Response{
-		Type:   responseType,
-		Status: code,
-		Code:   http.StatusText(code),
-	}
-}
-
-func checkServiceToken(serviceName string, token string) bool {
-	match := false
-	if token == context.GetServiceToken(serviceName) {
-		match = true
-	}
-	return match
-}
