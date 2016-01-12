@@ -117,6 +117,22 @@ func (m *Client) GetContainers() ([]Container, error) {
 	return containers, nil
 }
 
+func (m *Client) GetServiceContainers(serviceName string, stackName string) ([]Container, error) {
+	var serviceContainers = []Container{}
+	containers, err := m.GetContainers()
+	if err != nil {
+		return serviceContainers, err
+	}
+
+	for _, container := range containers {
+		if container.StackName == stackName && container.ServiceName == serviceName {
+			serviceContainers = append(serviceContainers, container)
+		}
+	}
+
+	return serviceContainers, nil
+}
+
 func (m *Client) GetHosts() ([]Host, error) {
 	resp, err := m.SendRequest("/hosts")
 	var hosts []Host
