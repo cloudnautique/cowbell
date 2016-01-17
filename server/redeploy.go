@@ -18,6 +18,7 @@ func ReDeployEntry(w http.ResponseWriter, r *http.Request) {
 		logrus.Infof("Request to redeploy service: %s", variables["serviceName"])
 		if checkServiceToken(variables["serviceName"], tokenList[0]) {
 			logrus.Infof("Redeploy!")
+			context.Redeploy(variables["serviceName"])
 		}
 	}
 
