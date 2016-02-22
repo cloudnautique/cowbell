@@ -25,6 +25,8 @@ type Cluster struct {
 
 	DiscoverySpec string `json:"discoverySpec,omitempty" yaml:"discovery_spec,omitempty"`
 
+	Hostname string `json:"hostname,omitempty" yaml:"hostname,omitempty"`
+
 	Info interface{} `json:"info,omitempty" yaml:"info,omitempty"`
 
 	Kind string `json:"kind,omitempty" yaml:"kind,omitempty"`
@@ -36,6 +38,8 @@ type Cluster struct {
 	PhysicalHostId string `json:"physicalHostId,omitempty" yaml:"physical_host_id,omitempty"`
 
 	Port int64 `json:"port,omitempty" yaml:"port,omitempty"`
+
+	PublicEndpoints []interface{} `json:"publicEndpoints,omitempty" yaml:"public_endpoints,omitempty"`
 
 	RemoveTime string `json:"removeTime,omitempty" yaml:"remove_time,omitempty"`
 

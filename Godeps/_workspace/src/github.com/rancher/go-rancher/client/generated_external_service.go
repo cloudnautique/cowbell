@@ -39,8 +39,6 @@ type ExternalService struct {
 
 	Removed string `json:"removed,omitempty" yaml:"removed,omitempty"`
 
-	SelectorLink string `json:"selectorLink,omitempty" yaml:"selector_link,omitempty"`
-
 	State string `json:"state,omitempty" yaml:"state,omitempty"`
 
 	Transitioning string `json:"transitioning,omitempty" yaml:"transitioning,omitempty"`
@@ -87,6 +85,8 @@ type ExternalServiceOperations interface {
 	ActionRemove(*ExternalService) (*Service, error)
 
 	ActionRemoveservicelink(*ExternalService, *AddRemoveServiceLinkInput) (*Service, error)
+
+	ActionRestart(*ExternalService, *ServiceRestart) (*Service, error)
 
 	ActionRollback(*ExternalService) (*Service, error)
 
@@ -213,6 +213,15 @@ func (c *ExternalServiceClient) ActionRemoveservicelink(resource *ExternalServic
 	resp := &Service{}
 
 	err := c.rancherClient.doAction(EXTERNAL_SERVICE_TYPE, "removeservicelink", &resource.Resource, input, resp)
+
+	return resp, err
+}
+
+func (c *ExternalServiceClient) ActionRestart(resource *ExternalService, input *ServiceRestart) (*Service, error) {
+
+	resp := &Service{}
+
+	err := c.rancherClient.doAction(EXTERNAL_SERVICE_TYPE, "restart", &resource.Resource, input, resp)
 
 	return resp, err
 }

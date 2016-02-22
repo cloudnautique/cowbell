@@ -31,9 +31,13 @@ type Service struct {
 
 	Name string `json:"name,omitempty" yaml:"name,omitempty"`
 
+	PublicEndpoints []interface{} `json:"publicEndpoints,omitempty" yaml:"public_endpoints,omitempty"`
+
 	RemoveTime string `json:"removeTime,omitempty" yaml:"remove_time,omitempty"`
 
 	Removed string `json:"removed,omitempty" yaml:"removed,omitempty"`
+
+	RetainIp bool `json:"retainIp,omitempty" yaml:"retain_ip,omitempty"`
 
 	Scale int64 `json:"scale,omitempty" yaml:"scale,omitempty"`
 
@@ -93,6 +97,8 @@ type ServiceOperations interface {
 	ActionRemove(*Service) (*Service, error)
 
 	ActionRemoveservicelink(*Service, *AddRemoveServiceLinkInput) (*Service, error)
+
+	ActionRestart(*Service, *ServiceRestart) (*Service, error)
 
 	ActionRollback(*Service) (*Service, error)
 
@@ -219,6 +225,15 @@ func (c *ServiceClient) ActionRemoveservicelink(resource *Service, input *AddRem
 	resp := &Service{}
 
 	err := c.rancherClient.doAction(SERVICE_TYPE, "removeservicelink", &resource.Resource, input, resp)
+
+	return resp, err
+}
+
+func (c *ServiceClient) ActionRestart(resource *Service, input *ServiceRestart) (*Service, error) {
+
+	resp := &Service{}
+
+	err := c.rancherClient.doAction(SERVICE_TYPE, "restart", &resource.Resource, input, resp)
 
 	return resp, err
 }

@@ -33,6 +33,8 @@ type DnsService struct {
 
 	Removed string `json:"removed,omitempty" yaml:"removed,omitempty"`
 
+	RetainIp bool `json:"retainIp,omitempty" yaml:"retain_ip,omitempty"`
+
 	SelectorLink string `json:"selectorLink,omitempty" yaml:"selector_link,omitempty"`
 
 	State string `json:"state,omitempty" yaml:"state,omitempty"`
@@ -81,6 +83,8 @@ type DnsServiceOperations interface {
 	ActionRemove(*DnsService) (*Service, error)
 
 	ActionRemoveservicelink(*DnsService, *AddRemoveServiceLinkInput) (*Service, error)
+
+	ActionRestart(*DnsService, *ServiceRestart) (*Service, error)
 
 	ActionRollback(*DnsService) (*Service, error)
 
@@ -207,6 +211,15 @@ func (c *DnsServiceClient) ActionRemoveservicelink(resource *DnsService, input *
 	resp := &Service{}
 
 	err := c.rancherClient.doAction(DNS_SERVICE_TYPE, "removeservicelink", &resource.Resource, input, resp)
+
+	return resp, err
+}
+
+func (c *DnsServiceClient) ActionRestart(resource *DnsService, input *ServiceRestart) (*Service, error) {
+
+	resp := &Service{}
+
+	err := c.rancherClient.doAction(DNS_SERVICE_TYPE, "restart", &resource.Resource, input, resp)
 
 	return resp, err
 }

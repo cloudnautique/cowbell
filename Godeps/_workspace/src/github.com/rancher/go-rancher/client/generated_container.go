@@ -119,6 +119,8 @@ type Container struct {
 
 	SecurityOpt []string `json:"securityOpt,omitempty" yaml:"security_opt,omitempty"`
 
+	StartCount int64 `json:"startCount,omitempty" yaml:"start_count,omitempty"`
+
 	StartOnCreate bool `json:"startOnCreate,omitempty" yaml:"start_on_create,omitempty"`
 
 	State string `json:"state,omitempty" yaml:"state,omitempty"`
@@ -195,6 +197,8 @@ type ContainerOperations interface {
 	ActionUpdate(*Container) (*Instance, error)
 
 	ActionUpdatehealthy(*Container) (*Instance, error)
+
+	ActionUpdatereinitializing(*Container) (*Instance, error)
 
 	ActionUpdateunhealthy(*Container) (*Instance, error)
 }
@@ -378,6 +382,15 @@ func (c *ContainerClient) ActionUpdatehealthy(resource *Container) (*Instance, e
 	resp := &Instance{}
 
 	err := c.rancherClient.doAction(CONTAINER_TYPE, "updatehealthy", &resource.Resource, nil, resp)
+
+	return resp, err
+}
+
+func (c *ContainerClient) ActionUpdatereinitializing(resource *Container) (*Instance, error) {
+
+	resp := &Instance{}
+
+	err := c.rancherClient.doAction(CONTAINER_TYPE, "updatereinitializing", &resource.Resource, nil, resp)
 
 	return resp, err
 }
