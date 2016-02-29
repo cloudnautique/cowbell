@@ -1,6 +1,9 @@
 package app
 
 import (
+	"bytes"
+	"encoding/gob"
+	"encoding/json"
 	"fmt"
 	"os"
 
@@ -23,12 +26,13 @@ type cowbellConfig struct {
 }
 
 type service struct {
-	Name             string
-	Decrement        int64
-	Increment        int64
-	Token            string
-	QuietTime        int
-	quietTimeChannel chan int
+	Name             string   `json:"name,omitempty"`
+	Decrement        int64    `json:"decrement,omitempty"`
+	Increment        int64    `json:"increment,omitempty"`
+	Token            string   `json:"token,omitempty"`
+	QuietTime        int      `json:"quietTime,omitempty"`
+	quietTimeChannel chan int `json:"-"`
+	PullOnUpgrade    bool     `json:"pullOnUpgrade,omitempty"`
 }
 
 //InitConfig initializes the application context.
@@ -92,20 +96,31 @@ func (c *Context) loadConfigFromMetadata() error {
 }
 
 func setService(serviceDef map[string]interface{}) *service {
-	s := &service{
-		Name:             serviceDef["name"].(string),
-		Decrement:        0, //disable decrement by default
-		Increment:        getInt64FromFloat64(serviceDef["increment"]),
-		Token:            serviceDef["token"].(string),
-		QuietTime:        getIntFromFloat64(serviceDef["quietTime"]),
-		quietTimeChannel: make(chan int, 1),
+	s := &service{}
+	bytesData, err := convertBytesFromMapStringInterface(serviceDef)
+	if err != nil {
+		logrus.Error(err)
+		logrus.Fatalf("Can't load service configs")
+	}
+	err = json.Unmarshal(bytesData, &s)
+	if err != nil {
+		logrus.Error(err)
+		logrus.Fatalf("Can't load service configs")
 	}
 
-	if val, ok := serviceDef["decrement"]; ok {
-		s.Decrement = getInt64FromFloat64(val)
-	}
+	s.quietTimeChannel = make(chan int, 1)
 
 	return s
+}
+
+func convertBytesFromMapStringInterface(data map[string]interface{}) ([]byte, error) {
+	var buf bytes.Buffer
+	enc := gob.NewEncoder(&buf)
+	err := enc.Encode(data)
+	if err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
 }
 
 func getIntFromFloat64(n interface{}) int {

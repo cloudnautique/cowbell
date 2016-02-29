@@ -11,7 +11,7 @@ const (
 
 func getServiceMetadata() map[string]interface{} {
 	serviceMetadata := map[string]interface{}{}
-	md, err := metadata.NewClientAndWait(metadataURL + "/2015-07-25")
+	md, err := metadata.NewClientAndWait(metadataURL + "/2015-12-19")
 	if err != nil {
 		logrus.Fatalf("Can not load configuration from metadata")
 	}

@@ -1,0 +1,18 @@
+web1:
+  image: alpine:3.2
+  stdin_open: true
+  tty: true
+  command: "/bin/sh"
+
+cowbell1:
+  image: golang:1.5
+  labels:
+    io.rancher.container.create_agent: 'true'
+    io.rancher.container.agent.role: environment
+  volumes:
+    - /Users/wmaxwell/code/go/cowbell/src:/go/src
+  stdin_open: true
+  tty: true
+  command: bash
+  ports:
+    - 8088:8088

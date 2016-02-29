@@ -1,0 +1,8 @@
+cowbell1:
+  metadata:
+    services:
+      - name: "web1"
+        increment: 1
+        decrement: 0
+        token: webtoken
+        quietTime: 30
